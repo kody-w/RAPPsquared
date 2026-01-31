@@ -56,6 +56,7 @@
 
 /* Main Content */
 .docs-content {
+    margin-left: 280px;
     padding: var(--space-2xl) var(--space-3xl);
     max-width: 900px;
 }
@@ -388,6 +389,7 @@
     }
 
     .docs-content {
+        margin-left: 0;
         padding: var(--space-xl);
     }
 }
