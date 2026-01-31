@@ -322,6 +322,9 @@
         <div class="pack-reveal" id="pack-reveal"></div>
     </div>
 
+    <!-- Config: Load local overrides first (if exists), then defaults -->
+    <script src="../assets/js/config.local.js" onerror=""></script>
+    <script src="../assets/js/config.js"></script>
     <script src="../assets/js/main.js"></script>
     <script>
         const CARDS = [

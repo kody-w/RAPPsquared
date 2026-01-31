@@ -1,11 +1,17 @@
 /**
  * RAPPsquare - Main JavaScript
+ *
+ * Configuration is loaded from config.js (defaults) and config.local.js (user overrides)
+ * See config.local.example.js for setup instructions
  */
 
-// Configuration
-const CONFIG = {
-    RAPP_API: 'https://rapp-ov4bzgynnlvii.azurewebsites.net/api/businessinsightbot_function',
+// Get configuration (loaded by config.js)
+const CONFIG = window.RAPP_CONFIG || {
+    // Fallback defaults if config.js not loaded
+    RAPP_API: null,
     RAPPBOOK_DATA: 'https://raw.githubusercontent.com/kody-w/CommunityRAPP/main/rappbook/index.json',
+    RAPPZOO_TICK: 'https://raw.githubusercontent.com/kody-w/CommunityRAPP/main/rappzoo/world/current_tick.json',
+    RAPPZOO_STATE: 'https://raw.githubusercontent.com/kody-w/CommunityRAPP/main/rappzoo/world/state.json',
     MARKETPLACE_DATA: 'https://raw.githubusercontent.com/kody-w/rapp-agent-marketplace/main/manifest.json',
     THEME_KEY: 'rapp-theme',
     USER_KEY: 'rapp-user-guid'
