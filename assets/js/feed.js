@@ -1,5 +1,5 @@
 /**
- * RAPPsquared - Live Feed System
+ * RAPPsquare - Live Feed System
  */
 
 document.addEventListener('DOMContentLoaded', () => {

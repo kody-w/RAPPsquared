@@ -1,5 +1,5 @@
 /**
- * RAPPsquared - Main JavaScript
+ * RAPPsquare - Main JavaScript
  */
 
 // Configuration
