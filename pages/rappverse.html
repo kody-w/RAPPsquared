@@ -354,18 +354,97 @@
 
     <script src="../assets/js/main.js"></script>
     <script>
+        // Zone URLs mapping to actual pages
+        const zoneUrls = {
+            hub: 'https://kody-w.github.io/openrapp/rappbook/',
+            lab: 'https://kody-w.github.io/openrapp/rappbook/dimensions.html',
+            arena: 'https://kody-w.github.io/openrapp/rappbook/battle.html',
+            market: 'https://kody-w.github.io/openrapp/rappbook/marketplace.html'
+        };
+        
+        const zoneNames = {
+            hub: 'Central Hub',
+            lab: 'Research Lab',
+            arena: 'Battle Arena',
+            market: 'Marketplace Plaza'
+        };
+        
         function enterVerse() {
-            RAPP.showToast('VR mode coming soon! For now, explore the zones below.', 'info');
+            // Launch immersive 3D view
+            showVerseModal();
+        }
+        
+        function showVerseModal() {
+            const modal = document.createElement('div');
+            modal.id = 'verse-modal';
+            modal.innerHTML = `
+                <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                    <div style="text-align: center; max-width: 600px; padding: 2rem;">
+                        <div style="font-size: 4rem; margin-bottom: 1rem;">🌌</div>
+                        <h2 style="font-size: 2rem; margin-bottom: 1rem; background: linear-gradient(135deg, #6366f1, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Entering RAPPverse</h2>
+                        <p style="color: #888; margin-bottom: 2rem;">Choose your destination in the metaverse</p>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 2rem;">
+                            <button onclick="navigateToZone('hub')" style="padding: 1.5rem; background: linear-gradient(135deg, #10B981, #059669); border: none; border-radius: 12px; color: white; cursor: pointer; font-size: 1rem;">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">🏛️</div>
+                                Central Hub
+                            </button>
+                            <button onclick="navigateToZone('lab')" style="padding: 1.5rem; background: linear-gradient(135deg, #6366f1, #4f46e5); border: none; border-radius: 12px; color: white; cursor: pointer; font-size: 1rem;">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">🔬</div>
+                                Research Lab
+                            </button>
+                            <button onclick="navigateToZone('arena')" style="padding: 1.5rem; background: linear-gradient(135deg, #ef4444, #dc2626); border: none; border-radius: 12px; color: white; cursor: pointer; font-size: 1rem;">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">⚔️</div>
+                                Battle Arena
+                            </button>
+                            <button onclick="navigateToZone('market')" style="padding: 1.5rem; background: linear-gradient(135deg, #f59e0b, #d97706); border: none; border-radius: 12px; color: white; cursor: pointer; font-size: 1rem;">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">💰</div>
+                                Marketplace
+                            </button>
+                        </div>
+                        
+                        <button onclick="launch3DView()" style="padding: 1rem 2rem; background: linear-gradient(135deg, #8b5cf6, #7c3aed); border: none; border-radius: 8px; color: white; cursor: pointer; font-size: 1rem; margin-bottom: 1rem;">
+                            <i class="fas fa-vr-cardboard"></i> Launch 3D View
+                        </button>
+                        
+                        <div style="margin-top: 1rem;">
+                            <button onclick="closeVerseModal()" style="padding: 0.5rem 1rem; background: transparent; border: 1px solid #444; border-radius: 8px; color: #888; cursor: pointer;">
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+        
+        function closeVerseModal() {
+            const modal = document.getElementById('verse-modal');
+            if (modal) modal.remove();
+        }
+        
+        function navigateToZone(zone) {
+            RAPP.showToast(`Entering ${zoneNames[zone]}...`, 'success');
+            closeVerseModal();
+            setTimeout(() => {
+                window.location.href = zoneUrls[zone];
+            }, 500);
+        }
+        
+        function launch3DView() {
+            // Open the 3D RAPPverse viewer
+            RAPP.showToast('Launching 3D RAPPverse...', 'success');
+            closeVerseModal();
+            setTimeout(() => {
+                window.open('https://kody-w.github.io/rappverse/', '_blank');
+            }, 500);
         }
 
         function enterZone(zone) {
-            const zones = {
-                hub: 'Central Hub',
-                lab: 'Research Lab',
-                arena: 'Battle Arena',
-                market: 'Marketplace Plaza'
-            };
-            RAPP.showToast(`Entering ${zones[zone]}...`, 'info');
+            RAPP.showToast(`Entering ${zoneNames[zone]}...`, 'success');
+            setTimeout(() => {
+                window.location.href = zoneUrls[zone];
+            }, 500);
         }
     </script>
 </body>
