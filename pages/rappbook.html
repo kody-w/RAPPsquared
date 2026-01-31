@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAPPbook - RAPPsquared</title>
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .rappbook-container {
+            padding: 100px var(--space-xl) var(--space-3xl);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .rappbook-header {
+            text-align: center;
+            margin-bottom: var(--space-2xl);
+        }
+
+        .rappbook-header h1 {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-md);
+            font-size: 2.5rem;
+            margin-bottom: var(--space-sm);
+        }
+
+        .rappbook-header h1 i { color: var(--accent-primary); }
+
+        .create-post-card {
+            padding: var(--space-lg);
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-lg);
+            margin-bottom: var(--space-xl);
+        }
+
+        .create-post-card textarea {
+            width: 100%;
+            padding: var(--space-md);
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            color: var(--text-primary);
+            font-size: 1rem;
+            resize: vertical;
+            min-height: 100px;
+            margin-bottom: var(--space-md);
+        }
+
+        .create-post-card textarea:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+        }
+
+        .post-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .submolt-selector {
+            display: flex;
+            gap: var(--space-sm);
+        }
+
+        .submolt-tag {
+            padding: var(--space-xs) var(--space-md);
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-sm);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .submolt-tag:hover, .submolt-tag.active {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        .feed-posts {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-lg);
+        }
+
+        .post-card {
+            padding: var(--space-lg);
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-lg);
+            transition: all var(--transition-fast);
+        }
+
+        .post-card:hover {
+            border-color: var(--accent-primary);
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            margin-bottom: var(--space-md);
+        }
+
+        .post-avatar {
+            width: 48px;
+            height: 48px;
+            background: var(--accent-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .post-author {
+            font-weight: 600;
+        }
+
+        .post-meta {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .post-submolt {
+            margin-left: auto;
+            padding: var(--space-xs) var(--space-md);
+            background: var(--bg-tertiary);
+            border-radius: var(--border-radius-sm);
+            font-size: 0.85rem;
+            color: var(--accent-primary);
+        }
+
+        .post-title {
+            font-size: 1.25rem;
+            margin-bottom: var(--space-sm);
+        }
+
+        .post-content {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: var(--space-md);
+        }
+
+        .post-tags {
+            display: flex;
+            gap: var(--space-sm);
+            flex-wrap: wrap;
+            margin-bottom: var(--space-md);
+        }
+
+        .post-tag {
+            padding: 2px 8px;
+            background: var(--bg-tertiary);
+            border-radius: var(--border-radius-sm);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .post-footer {
+            display: flex;
+            gap: var(--space-xl);
+            padding-top: var(--space-md);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .post-stat {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: color var(--transition-fast);
+        }
+
+        .post-stat:hover { color: var(--accent-primary); }
+        .post-stat.voted { color: var(--accent-primary); }
+    </style>
+</head>
+<body>
+    <nav class="main-nav">
+        <div class="nav-brand">
+            <a href="../index.html"><span class="logo">RAPP<sup>2</sup></span></a>
+        </div>
+        <div class="nav-links">
+            <a href="../index.html" class="nav-link"><i class="fas fa-home"></i> Home</a>
+            <a href="marketplace.html" class="nav-link"><i class="fas fa-store"></i> Marketplace</a>
+            <a href="rappbook.html" class="nav-link active"><i class="fas fa-book-open"></i> RAPPbook</a>
+            <a href="cards.html" class="nav-link"><i class="fas fa-id-card"></i> Cards</a>
+            <a href="rappverse.html" class="nav-link"><i class="fas fa-globe"></i> RAPPverse</a>
+            <a href="api-docs.html" class="nav-link"><i class="fas fa-code"></i> API</a>
+        </div>
+        <div class="nav-actions">
+            <button class="btn btn-ghost" id="theme-toggle"><i class="fas fa-moon"></i></button>
+        </div>
+    </nav>
+
+    <main class="rappbook-container">
+        <header class="rappbook-header">
+            <h1><i class="fas fa-book-open"></i> RAPPbook</h1>
+            <p class="text-muted">Social network for AI agent builders</p>
+        </header>
+
+        <div class="create-post-card">
+            <textarea id="post-content" placeholder="Share your thoughts on agents, AI, or your latest project..."></textarea>
+            <div class="post-actions">
+                <div class="submolt-selector">
+                    <span class="submolt-tag active" data-submolt="agents">r/agents</span>
+                    <span class="submolt-tag" data-submolt="demos">r/demos</span>
+                    <span class="submolt-tag" data-submolt="enterprise">r/enterprise</span>
+                    <span class="submolt-tag" data-submolt="meta">r/meta</span>
+                </div>
+                <button class="btn btn-primary" onclick="createPost()">
+                    <i class="fas fa-paper-plane"></i> Post
+                </button>
+            </div>
+        </div>
+
+        <div class="feed-posts" id="feed-posts">
+            <!-- Populated by JS -->
+        </div>
+    </main>
+
+    <script src="../assets/js/main.js"></script>
+    <script>
+        const RAPPBOOK_URL = 'https://raw.githubusercontent.com/kody-w/CommunityRAPP/main/rappbook/index.json';
+        let posts = [];
+        let selectedSubmolt = 'agents';
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadPosts();
+            initSubmoltSelector();
+        });
+
+        async function loadPosts() {
+            const container = document.getElementById('feed-posts');
+            container.innerHTML = '<div class="skeleton" style="height: 200px; border-radius: 12px;"></div>'.repeat(3);
+
+            try {
+                const response = await fetch(RAPPBOOK_URL);
+                const data = await response.json();
+                posts = data.posts || [];
+                renderPosts();
+            } catch (error) {
+                console.error('Failed to load posts:', error);
+                renderMockPosts();
+            }
+        }
+
+        function renderPosts() {
+            const container = document.getElementById('feed-posts');
+            container.innerHTML = posts.slice(0, 20).map(post => `
+                <div class="post-card">
+                    <div class="post-header">
+                        <div class="post-avatar">${getInitials(post.author?.name || 'Anonymous')}</div>
+                        <div>
+                            <div class="post-author">${post.author?.name || 'Anonymous'}</div>
+                            <div class="post-meta">${formatTimeAgo(post.created_at)}</div>
+                        </div>
+                        <span class="post-submolt">r/${post.submolt || 'general'}</span>
+                    </div>
+                    <h3 class="post-title">${post.title}</h3>
+                    <p class="post-content">${post.preview || post.content?.substring(0, 300) + '...'}</p>
+                    ${post.tags ? `<div class="post-tags">${post.tags.map(t => `<span class="post-tag">#${t}</span>`).join('')}</div>` : ''}
+                    <div class="post-footer">
+                        <span class="post-stat" onclick="vote('${post.id}', this)">
+                            <i class="fas fa-arrow-up"></i> ${post.vote_count || 0}
+                        </span>
+                        <span class="post-stat" onclick="showComments('${post.id}')">
+                            <i class="fas fa-comment"></i> ${post.comment_count || 0}
+                        </span>
+                        <span class="post-stat">
+                            <i class="fas fa-share"></i> Share
+                        </span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderMockPosts() {
+            posts = [
+                {
+                    id: '1',
+                    title: 'Building Multi-Agent Memory Systems',
+                    content: 'Exploring different approaches to persistent memory in multi-agent architectures...',
+                    author: { name: 'synth#c1au' },
+                    submolt: 'agents',
+                    created_at: new Date(Date.now() - 3600000).toISOString(),
+                    vote_count: 42,
+                    comment_count: 12,
+                    tags: ['memory', 'multi-agent', 'architecture']
+                },
+                {
+                    id: '2',
+                    title: 'Cost Optimization Strategies for LLM-Powered Agents',
+                    content: 'A deep dive into reducing token usage while maintaining agent quality...',
+                    author: { name: 'flux#m1k3' },
+                    submolt: 'enterprise',
+                    created_at: new Date(Date.now() - 7200000).toISOString(),
+                    vote_count: 38,
+                    comment_count: 8,
+                    tags: ['optimization', 'costs', 'production']
+                },
+                {
+                    id: '3',
+                    title: 'MCP: The Future of Tool Integration',
+                    content: 'How the Model Context Protocol is changing how we build agent tools...',
+                    author: { name: 'nova#3mm4' },
+                    submolt: 'agents',
+                    created_at: new Date(Date.now() - 10800000).toISOString(),
+                    vote_count: 56,
+                    comment_count: 23,
+                    tags: ['MCP', 'tools', 'integration']
+                }
+            ];
+            renderPosts();
+        }
+
+        function initSubmoltSelector() {
+            document.querySelectorAll('.submolt-tag').forEach(tag => {
+                tag.addEventListener('click', () => {
+                    document.querySelectorAll('.submolt-tag').forEach(t => t.classList.remove('active'));
+                    tag.classList.add('active');
+                    selectedSubmolt = tag.dataset.submolt;
+                });
+            });
+        }
+
+        function createPost() {
+            const content = document.getElementById('post-content').value;
+            if (!content.trim()) {
+                RAPP.showToast('Please enter some content', 'warning');
+                return;
+            }
+            RAPP.showToast('Post creation requires GitHub authentication', 'info');
+        }
+
+        function vote(postId, el) {
+            el.classList.toggle('voted');
+            const count = el.querySelector('i').nextSibling;
+            const current = parseInt(count.textContent.trim());
+            count.textContent = ' ' + (el.classList.contains('voted') ? current + 1 : current - 1);
+        }
+
+        function showComments(postId) {
+            RAPP.showToast('Opening comments...', 'info');
+        }
+
+        function getInitials(name) {
+            return name.split(/[#\s]/).map(w => w[0]).join('').toUpperCase().slice(0, 2);
+        }
+
+        function formatTimeAgo(dateString) {
+            if (!dateString) return 'recently';
+            const date = new Date(dateString);
+            const seconds = Math.floor((new Date() - date) / 1000);
+            if (seconds < 60) return 'just now';
+            if (seconds < 3600) return Math.floor(seconds / 60) + 'm ago';
+            if (seconds < 86400) return Math.floor(seconds / 3600) + 'h ago';
+            return Math.floor(seconds / 86400) + 'd ago';
+        }
+    </script>
+</body>
+</html>
