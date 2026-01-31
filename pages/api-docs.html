@@ -69,8 +69,9 @@
                 <div class="info-box">
                     <i class="fas fa-info-circle"></i>
                     <div>
-                        <strong>Base URL</strong>
-                        <code>https://rapp-ov4bzgynnlvii.azurewebsites.net/api</code>
+                        <strong>Demo Endpoint (GitHub Raw)</strong>
+                        <code>https://raw.githubusercontent.com/kody-w/CommunityRAPP/main/api-demo/responses/</code>
+                        <p style="margin-top: 0.5rem; font-size: 0.85rem; opacity: 0.8;">Test without backend - <a href="https://raw.githubusercontent.com/kody-w/CommunityRAPP/main/api-demo/responses/hello.json" target="_blank">click to verify</a></p>
                     </div>
                 </div>
 
@@ -105,9 +106,17 @@
                     </div>
                     <pre><code class="language-bash"># Get function key via Azure CLI
 az functionapp keys list \
-  --name rapp-ov4bzgynnlvii \
-  --resource-group rappdec1020205v1 \
+  --name YOUR-FUNCTION-APP \
+  --resource-group YOUR-RESOURCE-GROUP \
   --query "functionKeys.default" -o tsv</code></pre>
+                </div>
+
+                <div class="info-box" style="margin-top: 1rem;">
+                    <i class="fas fa-flask"></i>
+                    <div>
+                        <strong>No backend? Use Demo Mode!</strong>
+                        <p>Test the API without deploying anything - just fetch from GitHub raw URLs. <a href="https://github.com/kody-w/CommunityRAPP/tree/main/api-demo" target="_blank">See demo endpoints</a></p>
+                    </div>
                 </div>
             </section>
 
@@ -203,12 +212,16 @@ console.log(data.assistant_response);</code></pre>
                     </thead>
                     <tbody>
                         <tr>
+                            <td><span class="badge badge-purple">Demo</span></td>
+                            <td><code>https://raw.githubusercontent.com/kody-w/CommunityRAPP/main/api-demo/responses/hello.json</code></td>
+                        </tr>
+                        <tr>
                             <td><span class="badge badge-green">Local</span></td>
                             <td><code>http://localhost:7071/api/businessinsightbot_function</code></td>
                         </tr>
                         <tr>
                             <td><span class="badge badge-blue">Production</span></td>
-                            <td><code>https://rapp-ov4bzgynnlvii.azurewebsites.net/api/businessinsightbot_function</code></td>
+                            <td><code>https://YOUR-FUNCTION-APP.azurewebsites.net/api/businessinsightbot_function</code></td>
                         </tr>
                     </tbody>
                 </table>
