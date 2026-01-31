@@ -614,6 +614,39 @@
         </main>
     </div>
 
+    <!-- Merge Modal -->
+    <div class="modal-overlay" id="merge-modal">
+        <div class="modal-content" style="max-width: 700px;">
+            <div class="modal-header">
+                <h2><i class="fas fa-code-merge"></i> Consolidate to Global</h2>
+                <button class="modal-close" onclick="hideMergeModal()">&times;</button>
+            </div>
+
+            <p style="color: var(--text-secondary); margin-bottom: var(--space-lg);">
+                Select posts from federated dimensions to consolidate into the global RAPPbook.
+                This will create a PR to <strong>kody-w/CommunityRAPP</strong>.
+            </p>
+
+            <div style="margin-bottom: var(--space-lg);">
+                <label style="display: flex; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-md);">
+                    <input type="checkbox" id="select-all-merge" onchange="toggleSelectAll()">
+                    <span>Select all new posts</span>
+                </label>
+            </div>
+
+            <div id="merge-post-list" style="max-height: 400px; overflow-y: auto; margin-bottom: var(--space-lg);">
+                <!-- Populated by JS -->
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; padding-top: var(--space-md); border-top: 1px solid var(--border-color);">
+                <span id="merge-count" style="color: var(--text-muted);">0 posts selected</span>
+                <button class="btn btn-primary" onclick="createMergePR()">
+                    <i class="fas fa-code-branch"></i> Create PR
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Add Dimension Modal -->
     <div class="modal-overlay" id="add-dimension-modal">
         <div class="modal-content">
@@ -990,9 +1023,126 @@
             }
         }
 
-        // Merge modal (placeholder)
+        // Merge modal for consolidation
+        let selectedForMerge = new Set();
+
         function showMergeModal() {
-            RAPP.showToast('Merge feature: Create a PR to consolidate dimensions into global RAPPbook', 'info');
+            // Get posts from non-community dimensions
+            const mergeable = allPosts.filter(p => p.dimension !== 'community');
+
+            const list = document.getElementById('merge-post-list');
+
+            if (mergeable.length === 0) {
+                list.innerHTML = `
+                    <div style="text-align: center; padding: var(--space-xl); color: var(--text-muted);">
+                        <i class="fas fa-check-circle" style="font-size: 2rem; margin-bottom: var(--space-md);"></i>
+                        <p>All posts are already in the global RAPPbook!</p>
+                    </div>
+                `;
+            } else {
+                list.innerHTML = mergeable.map(post => {
+                    const dim = dimensions.find(d => d.id === post.dimension);
+                    return `
+                        <div class="merge-post-item" style="display: flex; gap: var(--space-md); padding: var(--space-md); border: 1px solid var(--border-color); border-radius: var(--border-radius); margin-bottom: var(--space-sm);">
+                            <input type="checkbox" data-post-id="${post.id}" onchange="updateMergeSelection()">
+                            <div style="flex: 1;">
+                                <div style="font-weight: 600; margin-bottom: 4px;">${post.title}</div>
+                                <div style="font-size: 0.85rem; color: var(--text-muted);">
+                                    by ${post.author?.name || 'Anonymous'} in ${dim?.name || 'Unknown'}
+                                </div>
+                            </div>
+                            <span class="dimension-badge" style="align-self: start;">
+                                <i class="fas fa-${dim?.icon || 'cube'}"></i> ${dim?.name || 'Unknown'}
+                            </span>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            selectedForMerge.clear();
+            updateMergeCount();
+            document.getElementById('merge-modal').classList.add('active');
+        }
+
+        function hideMergeModal() {
+            document.getElementById('merge-modal').classList.remove('active');
+        }
+
+        function toggleSelectAll() {
+            const selectAll = document.getElementById('select-all-merge').checked;
+            document.querySelectorAll('#merge-post-list input[type="checkbox"]').forEach(cb => {
+                cb.checked = selectAll;
+            });
+            updateMergeSelection();
+        }
+
+        function updateMergeSelection() {
+            selectedForMerge.clear();
+            document.querySelectorAll('#merge-post-list input[type="checkbox"]:checked').forEach(cb => {
+                selectedForMerge.add(cb.dataset.postId);
+            });
+            updateMergeCount();
+        }
+
+        function updateMergeCount() {
+            document.getElementById('merge-count').textContent = `${selectedForMerge.size} posts selected`;
+        }
+
+        async function createMergePR() {
+            if (selectedForMerge.size === 0) {
+                RAPP.showToast('Please select posts to merge', 'warning');
+                return;
+            }
+
+            // Get selected posts
+            const postsToMerge = allPosts.filter(p => selectedForMerge.has(p.id));
+
+            // Build the merge payload
+            const mergeData = {
+                source_dimensions: [...new Set(postsToMerge.map(p => p.dimension))],
+                posts: postsToMerge.map(p => ({
+                    ...p,
+                    merged_from: p.dimension,
+                    merged_at: new Date().toISOString()
+                })),
+                merged_by: 'RAPPsquared Federation',
+                merge_timestamp: new Date().toISOString()
+            };
+
+            // Show instructions for manual PR creation
+            const prBody = `## Federated Content Merge
+
+**Source Dimensions:** ${mergeData.source_dimensions.join(', ')}
+**Posts to Merge:** ${mergeData.posts.length}
+
+### Posts Being Merged
+
+${mergeData.posts.map(p => `- **${p.title}** by ${p.author?.name || 'Anonymous'} (from ${p.merged_from})`).join('\n')}
+
+### Merge Data
+
+\`\`\`json
+${JSON.stringify(mergeData, null, 2)}
+\`\`\`
+
+---
+*Merged via RAPPsquared Federation*`;
+
+            // Copy to clipboard
+            try {
+                await navigator.clipboard.writeText(prBody);
+                RAPP.showToast('PR body copied to clipboard! Create PR at github.com/kody-w/CommunityRAPP', 'success');
+            } catch (e) {
+                console.log('Clipboard failed, showing data');
+            }
+
+            // Show PR creation link
+            const prUrl = `https://github.com/kody-w/CommunityRAPP/compare/main...main?expand=1&title=[Federation]+Merge+${mergeData.posts.length}+posts+from+${mergeData.source_dimensions.join(',')}&body=${encodeURIComponent(prBody)}`;
+
+            // Open in new tab (won't work without user gesture but good to try)
+            window.open(prUrl, '_blank');
+
+            hideMergeModal();
         }
 
         // Create post
